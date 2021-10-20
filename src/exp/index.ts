@@ -28,7 +28,7 @@ export class BinOp implements IExp {
 	public type: 'binOp' = 'binOp'
 	public constructor(
 		public left: Exp,
-		public op: '+' | '-' | '<',
+		public op: '+' | '*' | '<',
 		public right: Exp
 	) {}
 }
