@@ -4,7 +4,7 @@
 	"scripts": {
 		"build": "tsc",
 		"lint": "eslint src",
-		"repl": "npm run build:repl; node repl",
+		"repl": "npm run build; node ./lib/repl/index.js",
 		"test": "jest --slient=false",
 		"prepare": "npm run build"
 	},
