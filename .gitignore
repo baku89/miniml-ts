@@ -3,6 +3,5 @@
 .parcel-cache
 node_modules
 
-lib
-repl
+/lib
 *.log
