@@ -1,12 +1,11 @@
 import peggy from 'peggy'
 
 import * as exp from '../exp'
-// import ParserDefinition from './parser.pegjs'
 
 const ParserDefinition = `
-Program = Exp
+Start = BinOp / Primary
 
-Exp = BinOp / Int / Bool
+Primary = Int / Bool
 
 Int = str:$([0-9]+)
 	{
@@ -20,12 +19,24 @@ Bool = str:$("true" / "false")
 		return new exp.Bool(val)
 	}
 
-Op = "+" / "*" / "<"
+BinOp = LessThan / Additive / Multitive
 
-BinOp = left:(Int / Bool) op:Op right:(Int / Bool)
+LessThan = left:(Additive / Primary) _ op:"<" _ right:(LessThan / Additive / Primary)
 	{
 		return new exp.BinOp(left, op, right)
 	}
+
+Additive = left:(Multitive / Primary) _ op:"+" _ right:(Additive / Multitive / Primary)
+	{
+		return new exp.BinOp(left, op, right)
+	}
+
+Multitive = left:Primary _ op:"*" _ right:(Multitive / Primary)
+	{
+		return new exp.BinOp(left, op, right)
+	}
+
+_ "whitespace" = $[ ,\\t\\n\\r]*
 `
 
 const parserSource = peggy.generate(ParserDefinition, {
