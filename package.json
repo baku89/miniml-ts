@@ -17,6 +17,7 @@
 	"version": "0.0.0",
 	"devDependencies": {
 		"@types/jest": "^27.0.2",
+		"@types/moo": "^0.5.5",
 		"@typescript-eslint/eslint-plugin": "^4.28.2",
 		"@typescript-eslint/parser": "^4.28.2",
 		"eslint": "^7.30.0",
@@ -24,6 +25,7 @@
 		"eslint-plugin-simple-import-sort": "^7.0.0",
 		"eslint-plugin-unused-imports": "^1.1.2",
 		"jest": "^27.2.4",
+		"moo": "^0.5.1",
 		"peggy": "^1.2.0",
 		"prettier": "^2.3.2",
 		"ts-jest": "^27.0.5",
