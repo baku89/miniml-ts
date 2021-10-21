@@ -22,8 +22,6 @@ export class Lexer {
 	public constructor(public input: string) {
 		this.lexer = moo.compile(rules)
 		this.lexer.reset(input)
-
-		console.log(Array.from(this.lexer))
 	}
 
 	public nextToken(): Token {
