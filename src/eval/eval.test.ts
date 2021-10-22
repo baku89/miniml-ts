@@ -19,3 +19,16 @@ describe('evaluator', () => {
 		})
 	}
 })
+
+describe('error handling', () => {
+	run('x', 'Variable not bound: x')
+	run('false + 1', 'Both arguments must be int: +')
+	run('false < true', 'Both arguments must be int: <')
+
+	function run(input: string, msg: string) {
+		test(`${input} must throw an error with message ${msg}`, () => {
+			const exp = parse(input)
+			expect(() => evaluate(exp, new Env())).toThrowError(msg)
+		})
+	}
+})
