@@ -16,7 +16,7 @@ Program = _ prog:Exp _
 
 Exp = LessThan / Term
 
-Term = Group / Let / If / Fn / Int / Bool / Var
+Term = Let / If / Fn / Int / Bool / Var / Group
 
 Int = [0-9]+
 	{
@@ -32,9 +32,19 @@ Bool = ("true" / "false")
 
 Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "and" / "in" / "fn"
 
-Var = !(Reserved End) $([a-zA-Z_] [a-zA-Z0-9_]*)
+Var = v:(AlphabeticalVar / InfixVar)
+	{
+		return v
+	}
+
+AlphabeticalVar = !(Reserved End) $([a-zA-Z_] [a-zA-Z0-9_]*)
 	{
 		return new exp.Var(text())
+	}
+
+InfixVar = "(" _ name:$("+" / "-" / "*" / "/" / ">" / "<" / "=")+ _ ")"
+	{
+		return new exp.Var(name)
 	}
 
 Group = "(" _ exp:Exp _ ")"

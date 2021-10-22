@@ -17,6 +17,14 @@ describe('literals', () => {
 	isExpType('if0', 'var')
 	isExpType('then_', 'var')
 	isExpType('_then', 'var')
+	isExpType('(+)', 'var')
+	isExpType('(-)', 'var')
+	isExpType('(*)', 'var')
+	isExpType('(/)', 'var')
+	isExpType('(>)', 'var')
+	isExpType('(=)', 'var')
+	isExpType('(++++)', 'var')
+	isExpType('(+/+)', 'var')
 
 	function isExpType(input: string, type: exp.Type) {
 		test(`${input} to be parsed as exp type ${type}`, () => {
