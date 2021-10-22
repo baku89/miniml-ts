@@ -57,11 +57,19 @@ LetDeclarations = head:Assign tail:(_ "and" _ Assign)*
 		return [head, ...(tail.map(t => t[3]))]
 	}
 
-Assign = name:Var _ "=" _ value:Exp
+Assign = VarAssign / FnAssign
+
+VarAssign = name:Var _ "=" _ value:Exp
 	{
 		return [name, value]
 	}
 
+FnAssign = name:Var params:(_ Var)+ _ "=" _ body:Exp
+	{
+		const paramVars = params.map(p => p[1])
+		const fn = paramVars.reduceRight((body, param) => new exp.Fn(param, body), body)
+		return [name, fn]
+	}
 
 Fn = "fn" _ param:Var _ "->" _ body:Exp
 	{

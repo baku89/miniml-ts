@@ -66,6 +66,14 @@ describe('parsing let expression', () => {
 		'let x = 1 and y = 2 in x + y',
 		'(let x = 1 and y = 2 in (x + y))'
 	)
+	testParsing(
+		'let twice x = x * 2 in twice',
+		'(let twice = (fn x -> (x * 2)) in twice)'
+	)
+	testParsing(
+		'let add x y = x + y in add',
+		'(let add = (fn x -> (fn y -> (x + y))) in add)'
+	)
 })
 
 describe('parsing function literal', () => {
