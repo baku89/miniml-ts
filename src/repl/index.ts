@@ -7,7 +7,7 @@ import {parse} from '../parser'
 
 function startRepl() {
 	repl.start({
-		prompt: '>> ',
+		prompt: '# ',
 		eval(input, context, file, cb) {
 			const exp = parse(input)
 			const val = evaluate(exp, new Env())
