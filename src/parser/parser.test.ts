@@ -70,6 +70,7 @@ describe('parsing let expression', () => {
 
 describe('parsing function literal', () => {
 	testParsing('fn x -> x + 1', '(fn x -> (x + 1))')
+	testParsing('fn x -> fn y -> x + y', '(fn x -> (fn y -> (x + y)))')
 })
 
 describe('parsing function application', () => {
