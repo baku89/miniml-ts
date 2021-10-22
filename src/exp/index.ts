@@ -1,4 +1,4 @@
-export type Exp = Var | Int | Bool | BinOp | If
+export type Exp = Var | Int | Bool | BinOp | If | Let
 
 export type Type = Exp['type']
 

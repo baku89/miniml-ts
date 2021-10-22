@@ -23,6 +23,11 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 			const stmt = test.value ? exp.consequent : exp.alternate
 			return evaluate(stmt, env)
 		}
+		case 'let': {
+			const value = evaluate(exp.value, env)
+			const innerEnv = env.extend(exp.name.id, value)
+			return evaluate(exp.body, innerEnv)
+		}
 	}
 }
 
