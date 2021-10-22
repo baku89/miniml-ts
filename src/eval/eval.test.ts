@@ -25,6 +25,10 @@ describe('error handling', () => {
 	run('x', 'Variable not bound: x')
 	run('false + 1', 'Both arguments must be int: +')
 	run('false < true', 'Both arguments must be int: <')
+	run(
+		'if 10 then 20 else 30',
+		'Test expression must be boolean value, but got: 10'
+	)
 
 	function run(input: string, msg: string) {
 		test(`${input} must throw an error with message ${msg}`, () => {

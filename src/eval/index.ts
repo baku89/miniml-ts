@@ -20,6 +20,11 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 		}
 		case 'if': {
 			const test = evaluate(exp.test, env)
+			if (test.type !== 'bool') {
+				throw new Error(
+					'Test expression must be boolean value, but got: ' + test.print()
+				)
+			}
 			const stmt = test.value ? exp.consequent : exp.alternate
 			return evaluate(stmt, env)
 		}
