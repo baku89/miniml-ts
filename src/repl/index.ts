@@ -1,6 +1,8 @@
 import * as os from 'os'
 import * as repl from 'repl'
 
+import {Env} from '../env'
+import {evaluate} from '../eval'
 import {parse} from '../parser'
 
 function startRepl() {
@@ -8,7 +10,8 @@ function startRepl() {
 		prompt: '>> ',
 		eval(input, context, file, cb) {
 			const exp = parse(input)
-			cb(null, exp.print())
+			const val = evaluate(exp, new Env())
+			cb(null, val.print())
 		},
 		writer: v => v,
 	})
