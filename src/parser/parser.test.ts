@@ -45,6 +45,14 @@ describe('parsing if expression', () => {
 		'if 1 + 1 then 2 < 3 else 3 < 4',
 		'(if (1 + 1) then (2 < 3) else (3 < 4))'
 	)
+	testParsing(
+		'if if a then b else c then d else e',
+		'(if (if a then b else c) then d else e)'
+	)
+	testParsing(
+		'if a then if b then c else d else e',
+		'(if a then (if b then c else d) else e)'
+	)
 })
 
 describe('parsing let expression', () => {
@@ -72,6 +80,11 @@ describe('parsing function application', () => {
 	testParsing('a + b c + d', '((a + (b c)) + d)')
 	testParsing('a < b c + d', '(a < ((b c) + d))')
 	testParsing('(a + b) c', '((a + b) c)')
+})
+
+describe('parsing complex expressions with proper grouping', () => {
+	testParsing('2 < if a then b else c', '(2 < (if a then b else c))')
+	testParsing('2 * let x = 1 in x * 2', '(2 * (let x = 1 in (x * 2)))')
 })
 
 function testParsing(input: string, expected: string) {
