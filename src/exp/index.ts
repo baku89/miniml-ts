@@ -58,6 +58,6 @@ export class If implements IExp {
 		const test = this.test.print()
 		const consequent = this.consequent.print()
 		const alternate = this.alternate.print()
-		return `if ${test} then ${consequent} else ${alternate}`
+		return `(if ${test} then ${consequent} else ${alternate})`
 	}
 }

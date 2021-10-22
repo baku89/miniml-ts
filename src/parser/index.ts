@@ -29,6 +29,11 @@ Group = "(" _ exp:Exp _ ")"
 		return exp
 	}
 
+If = "if" _ test:Exp _ "then" _ consequent:Exp _ "else" _ alternate:Exp
+	{
+		return new exp.If(test, consequent, alternate)
+	}
+
 BinOp = LessThan / Additive / Multitive
 
 LessThan = left:(Additive / Primary) _ op:"<" _ right:(LessThan / Additive / Primary)
