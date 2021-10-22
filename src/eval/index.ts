@@ -6,7 +6,7 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 	switch (exp.type) {
 		case 'var': {
 			const v = env.lookup(exp.id)
-			if (!v) throw new Error(`Variable not bound:` + exp.id)
+			if (!v) throw new Error(`Variable not bound: ` + exp.id)
 			return v
 		}
 		case 'int':
