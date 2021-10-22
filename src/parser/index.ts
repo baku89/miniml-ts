@@ -3,6 +3,12 @@ import peggy from 'peggy'
 import * as exp from '../exp'
 
 const ParserDefinition = `
+{
+	function foldInfixSequence(head, tail, op) {
+		return tail.reduce((left, [,,,right]) => new exp.BinOp(left, op, right), head) 
+	}
+}
+
 Program = _ prog:Exp _
 	{
 		return prog
@@ -60,19 +66,19 @@ Call = head:Term tail:(__ Arg)+
 
 BinOp = LessThan / Additive / Multitive
 
-LessThan = left:(Additive / Term) _ op:"<" _ right:(LessThan / Additive / Call / Term)
+LessThan = head:(Additive / Term) tail:(_ "<" _ (Additive / Call / Term))+
 	{
-		return new exp.BinOp(left, op, right)
+		return foldInfixSequence(head, tail, '<')
 	}
 
-Additive = left:(Multitive / Term) _ op:"+" _ right:(Additive / Multitive / Call / Term)
+Additive = head:(Multitive / Term) tail:(_ "+" _ (Multitive / Call / Term))+
 	{
-		return new exp.BinOp(left, op, right)
+		return foldInfixSequence(head, tail, '+')
 	}
 
-Multitive = left:Term _ op:"*" _ right:(Multitive / Call / Term)
+Multitive = head:Term tail:(_ "*" _ (Call / Term))+
 	{
-		return new exp.BinOp(left, op, right)
+		return foldInfixSequence(head, tail, '*')
 	}
 
 _ = Whitespace*

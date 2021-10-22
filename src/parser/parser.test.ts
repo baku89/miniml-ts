@@ -27,8 +27,9 @@ describe('literals', () => {
 })
 
 describe('parsing infix expression', () => {
-	// testParsing('1 < 2 < 3', '((1 < 2) < 3)')
-	// testParsing('1 + 2 + 3', '((1 + 2) + 3)')
+	testParsing('1 < 2 < 3', '((1 < 2) < 3)')
+	testParsing('1 + 2 + 3', '((1 + 2) + 3)')
+	testParsing('1 * 2 * 3', '((1 * 2) * 3)')
 	testParsing('1 * 2 + 3', '((1 * 2) + 3)')
 	testParsing('1 < 3', '(1 < 3)')
 	testParsing('1 + 2 < 3', '((1 + 2) < 3)')
