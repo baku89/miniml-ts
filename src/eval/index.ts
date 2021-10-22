@@ -20,7 +20,7 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 		}
 		case 'if': {
 			const test = evaluate(exp.test, env)
-			const stmt = test ? exp.consequent : exp.alternate
+			const stmt = test.value ? exp.consequent : exp.alternate
 			return evaluate(stmt, env)
 		}
 	}
