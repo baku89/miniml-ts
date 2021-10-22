@@ -60,17 +60,17 @@ Call = head:Term tail:(__ Arg)+
 
 BinOp = LessThan / Additive / Multitive
 
-LessThan = left:(Additive / Term) _ op:"<" _ right:(LessThan / Additive / Term)
+LessThan = left:(Additive / Term) _ op:"<" _ right:(LessThan / Additive / Call / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}
 
-Additive = left:(Multitive / Term) _ op:"+" _ right:(Additive / Multitive / Term)
+Additive = left:(Multitive / Term) _ op:"+" _ right:(Additive / Multitive / Call / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}
 
-Multitive = left:Term _ op:"*" _ right:(Multitive / Term)
+Multitive = left:Term _ op:"*" _ right:(Multitive / Call / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}

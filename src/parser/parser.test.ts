@@ -27,6 +27,8 @@ describe('literals', () => {
 })
 
 describe('parsing infix expression', () => {
+	// testParsing('1 < 2 < 3', '((1 < 2) < 3)')
+	// testParsing('1 + 2 + 3', '((1 + 2) + 3)')
 	testParsing('1 * 2 + 3', '((1 * 2) + 3)')
 	testParsing('1 < 3', '(1 < 3)')
 	testParsing('1 + 2 < 3', '((1 + 2) < 3)')
@@ -60,6 +62,10 @@ describe('parsing function application', () => {
 	testParsing('neg 10', '(neg 10)')
 	testParsing('sin pi * 2', '(sin (pi * 2))')
 	testParsing('a b c', '((a b) c)')
+	testParsing('a b 1 + 2', '((a b) (1 + 2))')
+	testParsing('a (b c)', '(a (b c))')
+	testParsing('a + b c', '(a + (b c))')
+	testParsing('(a + b) c', '((a + b) c)')
 })
 
 function testParsing(input: string, expected: string) {
