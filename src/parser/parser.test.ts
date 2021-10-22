@@ -56,6 +56,12 @@ describe('parsing function literal', () => {
 	testParsing('fn x -> x + 1', '(fn x -> (x + 1))')
 })
 
+describe('parsing function application', () => {
+	testParsing('neg 10', '(neg 10)')
+	testParsing('sin pi * 2', '(sin (pi * 2))')
+	testParsing('a b c', '((a b) c)')
+})
+
 function testParsing(input: string, expected: string) {
 	test(`${input} to be parsed as ${expected}`, () => {
 		const exp = parse(input)

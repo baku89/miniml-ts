@@ -8,7 +8,7 @@ Program = _ prog:Exp _
 		return prog
 	}
 
-Exp = BinOp / Primary
+Exp = BinOp / Call / Primary
 
 Primary = Group / Let / If / Fn / Int / Bool / Var
 
@@ -49,6 +49,11 @@ Let = "let" _ name:Var _ "=" _ value:Exp _ "in" _ body:Exp
 Fn = "fn" _ param:Var _ "->" _ body:Exp
 	{
 		return new exp.Fn(param, body)
+	}
+
+Call = fn:Primary __ arg:Exp
+	{
+		return new exp.Call(fn, arg)
 	}
 
 BinOp = LessThan / Additive / Multitive
