@@ -3,9 +3,9 @@ import peggy from 'peggy'
 import * as exp from '../exp'
 
 const ParserDefinition = `
-Start = BinOp / Primary
+Exp = BinOp / Primary
 
-Primary = Int / Bool
+Primary = Group / Int / Bool
 
 Int = str:$([0-9]+)
 	{
@@ -17,6 +17,11 @@ Bool = str:$("true" / "false")
 	{
 		const val = str === 'true'
 		return new exp.Bool(val)
+	}
+
+Group = "(" _ exp:Exp _ ")"
+	{
+		return exp
 	}
 
 BinOp = LessThan / Additive / Multitive
