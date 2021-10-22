@@ -1,3 +1,4 @@
+import {parse} from '../parser'
 import * as value from '../value'
 
 export class Env<T> {
@@ -31,6 +32,10 @@ export class Env<T> {
 
 	public static createGlobal() {
 		const env = new Env<value.Value>()
+
+		env.pairs.set('+', new value.Fn('x', parse('fn y -> x + y'), env))
+		env.pairs.set('*', new value.Fn('x', parse('fn y -> x * y'), env))
+		env.pairs.set('<', new value.Fn('x', parse('fn y -> x < y'), env))
 
 		return env
 	}

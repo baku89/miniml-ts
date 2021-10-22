@@ -26,6 +26,15 @@ describe('function application', () => {
 		'let applyTwice = fn f -> fn x -> f (f x) and inc = fn x -> x + 1 in applyTwice inc 4',
 		'6'
 	)
+	testEvaluate('(+) 2 3', '5')
+	testEvaluate('(*) 2 3', '6')
+	testEvaluate('(<) 2 3', 'true')
+	testEvaluate('(<) 2 3', 'true')
+	testEvaluate(
+		'let apply3 = fn f -> fn x -> f (f x x) (f x x) in apply3 (+) 5',
+		'20'
+	)
+	testEvaluate('let apply3 f x = f (f x x) (f x x) in apply3 (+) 5', '20')
 })
 
 describe('error handling', () => {
