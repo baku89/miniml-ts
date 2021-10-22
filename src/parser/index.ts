@@ -30,7 +30,7 @@ Bool = ("true" / "false")
 		return new exp.Bool(val)
 	}
 
-Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in" / "fn"
+Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "and" / "in" / "fn"
 
 Var = !(Reserved End) $([a-zA-Z_] [a-zA-Z0-9_]*)
 	{
@@ -47,10 +47,21 @@ If = "if" _ test:Exp _ "then" _ consequent:Exp _ "else" _ alternate:Exp
 		return new exp.If(test, consequent, alternate)
 	}
 
-Let = "let" _ name:Var _ "=" _ value:Exp _ "in" _ body:Exp
+Let = "let" _ pairs:LetDeclarations _ "in" _ body:Exp
 	{
-		return new exp.Let([[name, value]], body)
+		return new exp.Let(pairs, body)
 	}
+
+LetDeclarations = head:Assign tail:(_ "and" _ Assign)*
+	{
+		return [head, ...(tail.map(t => t[3]))]
+	}
+
+Assign = name:Var _ "=" _ value:Exp
+	{
+		return [name, value]
+	}
+
 
 Fn = "fn" _ param:Var _ "->" _ body:Exp
 	{
