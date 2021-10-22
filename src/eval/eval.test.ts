@@ -40,7 +40,7 @@ describe('error handling', () => {
 	function run(input: string, msg: string) {
 		test(`${input} must throw an error with message ${msg}`, () => {
 			const exp = parse(input)
-			expect(() => evaluate(exp, new Env())).toThrowError(msg)
+			expect(() => evaluate(exp, Env.createGlobal())).toThrowError(msg)
 		})
 	}
 })
@@ -48,7 +48,7 @@ describe('error handling', () => {
 function testEvaluate(input: string, expected: string) {
 	test(`${input} is evaluated to ${expected}`, () => {
 		const exp = parse(input)
-		const val = evaluate(exp, new Env())
+		const val = evaluate(exp, Env.createGlobal())
 		expect(val.print()).toBe(expected)
 	})
 }

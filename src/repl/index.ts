@@ -10,7 +10,8 @@ function startRepl() {
 		prompt: '# ',
 		eval(input, context, file, cb) {
 			const exp = parse(input)
-			const val = evaluate(exp, new Env())
+			const env = Env.createGlobal()
+			const val = evaluate(exp, env)
 			cb(null, val.print())
 		},
 		writer: v => v,

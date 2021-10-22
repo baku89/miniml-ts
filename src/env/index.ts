@@ -1,5 +1,7 @@
+import * as value from '../value'
+
 export class Env<T> {
-	private pairs = new Map<string, T>()
+	private constructor(private pairs = new Map<string, T>()) {}
 
 	public extend(name: string, value: T): Env<T> {
 		const newEnv = new Env<T>()
@@ -25,5 +27,11 @@ export class Env<T> {
 	public foldr<U>(f: (value: T, previousValue: U) => U, initialValue: U): U {
 		const values = [...this.pairs.values()]
 		return values.reduceRight((p, c) => f(c, p), initialValue)
+	}
+
+	public static createGlobal() {
+		const env = new Env<value.Value>()
+
+		return env
 	}
 }
