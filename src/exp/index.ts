@@ -1,4 +1,4 @@
-export type Exp = Var | Int | Bool | BinOp | If | Let | Fn | Call
+export type Exp = Var | Int | Bool | Infix | If | Let | Fn | Call
 
 export type Type = Exp['type']
 
@@ -35,8 +35,8 @@ export class Bool implements IExp {
 	}
 }
 
-export class BinOp implements IExp {
-	public type: 'binOp' = 'binOp'
+export class Infix implements IExp {
+	public type: 'infix' = 'infix'
 	public constructor(
 		public left: Exp,
 		public op: '+' | '*' | '<',

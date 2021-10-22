@@ -13,10 +13,10 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 			return new value.Int(exp.value)
 		case 'bool':
 			return new value.Bool(exp.value)
-		case 'binOp': {
+		case 'infix': {
 			const left = evaluate(exp.left, env)
 			const right = evaluate(exp.right, env)
-			return applyBinOp(exp.op, left, right)
+			return applyInfix(exp.op, left, right)
 		}
 		case 'if': {
 			const test = evaluate(exp.test, env)
@@ -35,8 +35,8 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 	}
 }
 
-function applyBinOp(
-	op: exp.BinOp['op'],
+function applyInfix(
+	op: exp.Infix['op'],
 	left: value.Value,
 	right: value.Value
 ): value.Value {

@@ -5,7 +5,7 @@ import * as exp from '../exp'
 const ParserDefinition = `
 {
 	function foldInfixSequence(head, tail, op) {
-		return tail.reduce((left, [,,,right]) => new exp.BinOp(left, op, right), head) 
+		return tail.reduce((left, [,,,right]) => new exp.Infix(left, op, right), head) 
 	}
 }
 
@@ -16,7 +16,7 @@ Program = _ prog:Exp _
 
 Exp = Call / Arg
 
-Arg = BinOp / Term
+Arg = Infix / Term
 
 Term = Group / Let / If / Fn / Int / Bool / Var
 
@@ -64,7 +64,7 @@ Call = head:Term tail:(__ Arg)+
 		return tail.reduce((fn, [,arg]) => new exp.Call(fn, arg), head)
 	}
 
-BinOp = LessThan / Additive / Multitive
+Infix = LessThan / Additive / Multitive
 
 LessThan = head:(Additive / Term) tail:(_ "<" _ (Additive / Call / Term))+
 	{
