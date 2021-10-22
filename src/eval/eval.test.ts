@@ -22,6 +22,10 @@ describe('function application', () => {
 		`let f = let x = 2 in let addx = fn y -> x + y in addx in f 4`,
 		'6'
 	)
+	testEvaluate(
+		'let applyTwice = fn f -> fn x -> f (f x) and inc = fn x -> x + 1 in applyTwice inc 4',
+		'6'
+	)
 })
 
 describe('error handling', () => {
