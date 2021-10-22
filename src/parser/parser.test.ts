@@ -1,4 +1,4 @@
-import {Exp} from '../exp'
+import * as exp from '../exp'
 import {parse} from '.'
 
 describe('literals', () => {
@@ -18,7 +18,7 @@ describe('literals', () => {
 	runTest('then_', 'var')
 	runTest('_then', 'var')
 
-	function runTest(input: string, type: Exp['type']) {
+	function runTest(input: string, type: exp.Type) {
 		test(`${input} to be parsed as exp type ${type}`, () => {
 			const exp = parse(input)
 			expect(exp.type).toBe(type)

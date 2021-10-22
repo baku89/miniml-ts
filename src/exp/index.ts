@@ -1,5 +1,7 @@
 export type Exp = Var | Int | Bool | BinOp | If
 
+export type Type = Exp['type']
+
 interface IExp {
 	type: string
 
