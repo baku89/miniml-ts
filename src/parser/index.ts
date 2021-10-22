@@ -10,9 +10,9 @@ Program = _ prog:Exp _
 
 Exp = BinOp / Primary
 
-Primary = Group / Let / If / Int / Bool / Var
+Primary = Group / Let / If / Fn / Int / Bool / Var
 
-Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in"
+Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in" / "fn"
 
 Int = [0-9]+
 	{
@@ -46,6 +46,11 @@ Let = "let" _ name:Var _ "=" _ value:Exp _ "in" _ body:Exp
 		return new exp.Let(name, value, body)
 	}
 
+Fn = "fn" _ param:Var _ "->" _ body:Exp
+	{
+		return new exp.Fn(param, body)
+	}
+
 BinOp = LessThan / Additive / Multitive
 
 LessThan = left:(Additive / Primary) _ op:"<" _ right:(LessThan / Additive / Primary)
@@ -64,9 +69,11 @@ Multitive = left:Primary _ op:"*" _ right:(Multitive / Primary)
 	}
 
 _ = Whitespace*
+__ = Whitespace+
+
 Whitespace = $[ \\t\\n\\r]
 EOF = !.
-End = EOF / Whitespace+
+End = EOF / __
 
 `
 

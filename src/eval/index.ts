@@ -28,6 +28,10 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 			const innerEnv = env.extend(exp.name.id, value)
 			return evaluate(exp.body, innerEnv)
 		}
+		case 'fn':
+		case 'call': {
+			throw new Error('Not yet implemented')
+		}
 	}
 }
 

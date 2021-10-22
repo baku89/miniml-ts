@@ -1,4 +1,4 @@
-export type Exp = Var | Int | Bool | BinOp | If | Let
+export type Exp = Var | Int | Bool | BinOp | If | Let | Fn | Call
 
 export type Type = Exp['type']
 
@@ -74,5 +74,31 @@ export class Let implements IExp {
 		const value = this.value.print()
 		const body = this.body.print()
 		return `(let ${name} = ${value} in ${body})`
+	}
+}
+
+export class Fn implements IExp {
+	public type: 'fn' = 'fn'
+
+	public constructor(public param: Var, public body: Exp) {}
+
+	public print(): string {
+		const param = this.param.print()
+		const body = this.body.print()
+
+		return `(fn ${param} -> ${body})`
+	}
+}
+
+export class Call implements IExp {
+	public type: 'call' = 'call'
+
+	public constructor(public fn: Exp, public arg: Exp) {}
+
+	public print(): string {
+		const fn = this.fn.print()
+		const arg = this.arg.print()
+
+		return `(${fn} ${arg})`
 	}
 }
