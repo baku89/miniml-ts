@@ -3,24 +3,25 @@ import {parse} from '../parser'
 import {evaluate} from '.'
 
 describe('evaluator', () => {
-	run('1', '1')
-	run('2', '2')
-	run('1 + 2', '3')
-	run('1 < 2', 'true')
-	run('2 < 1', 'false')
-	run('if 1 < 2 then 5 else 6', '5')
-	run('let x = 1 in let y = 2 in x + y', '3')
-	run('let x = 1 in let x = 2 and y = x in x + y', '3')
-	run('fn x -> x', '(fn x -> x)')
-	run('fn x -> x + 1', '(fn x -> (x + 1))')
+	testEvaluate('1', '1')
+	testEvaluate('2', '2')
+	testEvaluate('1 + 2', '3')
+	testEvaluate('1 < 2', 'true')
+	testEvaluate('2 < 1', 'false')
+	testEvaluate('if 1 < 2 then 5 else 6', '5')
+	testEvaluate('let x = 1 in let y = 2 in x + y', '3')
+	testEvaluate('let x = 1 in let x = 2 and y = x in x + y', '3')
+	testEvaluate('fn x -> x', '(fn x -> x)')
+	testEvaluate('fn x -> x + 1', '(fn x -> (x + 1))')
+})
 
-	function run(input: string, expected: string) {
-		test(`${input} is evaluated to ${expected}`, () => {
-			const exp = parse(input)
-			const val = evaluate(exp, new Env())
-			expect(val.print()).toBe(expected)
-		})
-	}
+describe('function application', () => {
+	testEvaluate('(fn x -> x * 2) 3', '6')
+	testEvaluate('(fn x -> fn y -> x + y) 10 5', '15')
+	testEvaluate(
+		`let f = let x = 2 in let addx = fn y -> x + y in addx in f 4`,
+		'6'
+	)
 })
 
 describe('error handling', () => {
@@ -39,3 +40,11 @@ describe('error handling', () => {
 		})
 	}
 })
+
+function testEvaluate(input: string, expected: string) {
+	test(`${input} is evaluated to ${expected}`, () => {
+		const exp = parse(input)
+		const val = evaluate(exp, new Env())
+		expect(val.print()).toBe(expected)
+	})
+}

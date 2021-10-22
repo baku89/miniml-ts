@@ -42,7 +42,13 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 			return new value.Fn(exp.param.id, exp.body, env)
 		}
 		case 'call': {
-			throw new Error('Not yet implemented')
+			const fn = evaluate(exp.fn, env)
+			if (fn.type !== 'fn') throw new Error('Non-function value is applied')
+
+			const arg = evaluate(exp.arg, env)
+			const fnEnv = fn.env.extend(fn.param, arg)
+
+			return evaluate(fn.body, fnEnv)
 		}
 	}
 }
