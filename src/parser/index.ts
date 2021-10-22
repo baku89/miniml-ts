@@ -49,7 +49,7 @@ If = "if" _ test:Exp _ "then" _ consequent:Exp _ "else" _ alternate:Exp
 
 Let = "let" _ name:Var _ "=" _ value:Exp _ "in" _ body:Exp
 	{
-		return new exp.Let(name, value, body)
+		return new exp.Let([[name, value]], body)
 	}
 
 Fn = "fn" _ param:Var _ "->" _ body:Exp

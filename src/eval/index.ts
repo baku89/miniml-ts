@@ -24,8 +24,13 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 			return evaluate(stmt, env)
 		}
 		case 'let': {
-			const value = evaluate(exp.value, env)
-			const innerEnv = env.extend(exp.name.id, value)
+			let innerEnv = env
+
+			for (const [name, val] of exp.pairs) {
+				const evaluated = evaluate(val, env)
+				innerEnv = innerEnv.extend(name.id, evaluated)
+			}
+
 			return evaluate(exp.body, innerEnv)
 		}
 		case 'fn':

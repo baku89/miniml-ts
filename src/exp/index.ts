@@ -67,13 +67,15 @@ export class If implements IExp {
 export class Let implements IExp {
 	public type: 'let' = 'let'
 
-	public constructor(public name: Var, public value: Exp, public body: Exp) {}
+	public constructor(public pairs: [Var, Exp][], public body: Exp) {}
 
 	public print(): string {
-		const name = this.name.print()
-		const value = this.value.print()
+		const declarations = this.pairs
+			.map(([n, e]) => `${n.print()} = ${e.print()}`)
+			.join(' and ')
+
 		const body = this.body.print()
-		return `(let ${name} = ${value} in ${body})`
+		return `(let ${declarations} in ${body})`
 	}
 }
 
