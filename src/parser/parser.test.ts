@@ -66,6 +66,8 @@ describe('parsing function application', () => {
 	testParsing('a b 1 + 2', '((a b) (1 + 2))')
 	testParsing('a (b c)', '(a (b c))')
 	testParsing('a + b c', '(a + (b c))')
+	testParsing('a + b c + d', '((a + (b c)) + d)')
+	testParsing('a + b c * d', '(a + ((b c) * d))')
 	testParsing('(a + b) c', '((a + b) c)')
 })
 
