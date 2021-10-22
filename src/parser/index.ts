@@ -14,15 +14,15 @@ Primary = Group / Let / If / Int / Bool / Var
 
 Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in"
 
-Int = str:$([0-9]+)
+Int = [0-9]+
 	{
-		const val = parseInt(str)
+		const val = parseInt(text())
 		return new exp.Int(val)
 	}
 
-Bool = str:$("true" / "false")
+Bool = ("true" / "false")
 	{
-		const val = str === 'true'
+		const val = text() === 'true'
 		return new exp.Bool(val)
 	}
 
