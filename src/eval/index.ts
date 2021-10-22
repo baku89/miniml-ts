@@ -1,8 +1,8 @@
 import {Env} from '../env'
-import * as exp from '../exp'
+import {Exp, Infix} from '../exp'
 import * as value from '../value'
 
-export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
+export function evaluate(exp: Exp, env: Env<value.Value>): value.Value {
 	switch (exp.type) {
 		case 'var': {
 			const v = env.lookup(exp.id)
@@ -38,8 +38,20 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 
 			return evaluate(exp.body, innerEnv)
 		}
-		case 'letRec':
-			throw new Error('Not yet implemented')
+		case 'letRec': {
+			const innerEnv = env.clone()
+
+			for (const [name, val] of exp.pairs) {
+				if (val.type !== 'fn') {
+					throw new Error('let rec for non-functional value is not supported')
+				}
+
+				const fn = new value.Fn(val.param.id, val.body, innerEnv)
+				innerEnv.set(name.id, fn)
+			}
+
+			return evaluate(exp.body, innerEnv)
+		}
 		case 'fn': {
 			return new value.Fn(exp.param.id, exp.body, env)
 		}
@@ -56,7 +68,7 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 }
 
 function applyInfix(
-	op: exp.Infix['op'],
+	op: Infix['op'],
 	left: value.Value,
 	right: value.Value
 ): value.Value {

@@ -37,6 +37,10 @@ describe('function application', () => {
 	testEvaluate('let apply3 f x = f (f x x) (f x x) in apply3 (+) 5', '20')
 })
 
+describe('recursive function', () => {
+	testEvaluate('let rec f x = if 9 < x then 10 else x + f (x + 1) in f 3', '52')
+})
+
 describe('error handling', () => {
 	run('x', 'Variable not bound: x')
 	run('false + 1', 'Both arguments must be int: +')

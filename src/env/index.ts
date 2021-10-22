@@ -17,6 +17,15 @@ export class Env<T> {
 		return this.pairs.get(name) ?? null
 	}
 
+	public clone(): Env<T> {
+		const pairs = this.pairs.entries()
+		return new Env(new Map(pairs))
+	}
+
+	public set(name: string, value: T) {
+		this.pairs.set(name, value)
+	}
+
 	public map(f: (value: T) => T): Env<T> {
 		const newEnv = new Env<T>()
 
