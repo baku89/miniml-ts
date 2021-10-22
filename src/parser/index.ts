@@ -14,13 +14,9 @@ Program = _ prog:Exp _
 		return prog
 	}
 
-Exp = Call / Arg
-
-Arg = Infix / Term
+Exp = LessThan / Term
 
 Term = Group / Let / If / Fn / Int / Bool / Var
-
-Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in" / "fn"
 
 Int = [0-9]+
 	{
@@ -33,6 +29,8 @@ Bool = ("true" / "false")
 		const val = text() === 'true'
 		return new exp.Bool(val)
 	}
+
+Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in" / "fn"
 
 Var = !(Reserved End) $([a-zA-Z_] [a-zA-Z0-9_]*)
 	{
@@ -59,27 +57,29 @@ Fn = "fn" _ param:Var _ "->" _ body:Exp
 		return new exp.Fn(param, body)
 	}
 
-Call = head:Term tail:(__ Arg)+
-	{
-		return tail.reduce((fn, [,arg]) => new exp.Call(fn, arg), head)
-	}
-
-Infix = LessThan / Additive / Multitive
-
-LessThan = head:(Additive / Term) tail:(_ "<" _ (Additive / Call / Term))+
+LessThan = head:Additive tail:(_ "<" _ Additive)+
 	{
 		return foldInfixSequence(head, tail, '<')
 	}
+	/ Additive
 
-Additive = head:(Multitive / Term) tail:(_ "+" _ (Multitive / Call / Term))+
+Additive = head:Multitive tail:(_ "+" _ Multitive)+
 	{
 		return foldInfixSequence(head, tail, '+')
 	}
+	/ Multitive
 
-Multitive = head:Term tail:(_ "*" _ (Call / Term))+
+Multitive = head:Call tail:(_ "*" _ Call)+
 	{
 		return foldInfixSequence(head, tail, '*')
 	}
+	/ Call
+
+Call = head:Term tail:(__ Term)+
+	{
+		return tail.reduce((fn, [,arg]) => new exp.Call(fn, arg), head)
+	}
+	/ Term
 
 _ = Whitespace*
 __ = Whitespace+
