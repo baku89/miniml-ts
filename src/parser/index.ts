@@ -10,7 +10,9 @@ Program = _ prog:Exp _
 
 Exp = BinOp / Primary
 
-Primary = Group / If / Int / Bool
+Primary = Group / Let / If / Int / Bool / Var
+
+Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in"
 
 Int = str:$([0-9]+)
 	{
@@ -24,6 +26,11 @@ Bool = str:$("true" / "false")
 		return new exp.Bool(val)
 	}
 
+Var = !(Reserved End) $([a-zA-Z_] [a-zA-Z0-9_]*)
+	{
+		return new exp.Var(text())
+	}
+
 Group = "(" _ exp:Exp _ ")"
 	{
 		return exp
@@ -32,6 +39,11 @@ Group = "(" _ exp:Exp _ ")"
 If = "if" _ test:Exp _ "then" _ consequent:Exp _ "else" _ alternate:Exp
 	{
 		return new exp.If(test, consequent, alternate)
+	}
+
+Let = "let" _ name:Var _ "=" _ value:Exp _ "in" _ body:Exp
+	{
+		return new exp.Let(name, value, body)
 	}
 
 BinOp = LessThan / Additive / Multitive
@@ -51,7 +63,11 @@ Multitive = left:Primary _ op:"*" _ right:(Multitive / Primary)
 		return new exp.BinOp(left, op, right)
 	}
 
-_ "whitespace" = $[ ,\\t\\n\\r]*
+_ = Whitespace*
+Whitespace = $[ \\t\\n\\r]
+EOF = !.
+End = EOF / Whitespace+
+
 `
 
 const parserSource = peggy.generate(ParserDefinition, {

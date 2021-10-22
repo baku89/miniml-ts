@@ -61,3 +61,16 @@ export class If implements IExp {
 		return `(if ${test} then ${consequent} else ${alternate})`
 	}
 }
+
+export class Let implements IExp {
+	public type: 'let' = 'let'
+
+	public constructor(public name: Var, public value: Exp, public body: Exp) {}
+
+	public print(): string {
+		const name = this.name.print()
+		const value = this.value.print()
+		const body = this.body.print()
+		return `(let ${name} = ${value} in ${body})`
+	}
+}
