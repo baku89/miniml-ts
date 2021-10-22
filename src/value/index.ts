@@ -1,4 +1,7 @@
-export type Value = Int | Bool
+import {Env} from '../env'
+import * as exp from '../exp'
+
+export type Value = Int | Bool | Fn
 
 interface IValue {
 	print(): string
@@ -21,5 +24,19 @@ export class Bool implements IValue {
 
 	public print(): string {
 		return this.value ? 'true' : 'false'
+	}
+}
+
+export class Fn implements IValue {
+	public type: 'fn' = 'fn'
+
+	public constructor(
+		public param: string,
+		public body: exp.Exp,
+		public env: Env<Value>
+	) {}
+
+	public print(): string {
+		return `(fn ${this.param} -> ${this.body.print()})`
 	}
 }

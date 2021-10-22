@@ -38,7 +38,9 @@ export function evaluate(exp: exp.Exp, env: Env<value.Value>): value.Value {
 
 			return evaluate(exp.body, innerEnv)
 		}
-		case 'fn':
+		case 'fn': {
+			return new value.Fn(exp.param.id, exp.body, env)
+		}
 		case 'call': {
 			throw new Error('Not yet implemented')
 		}
