@@ -8,9 +8,11 @@ Program = _ prog:Exp _
 		return prog
 	}
 
-Exp = BinOp / Call / Primary
+Exp = Call / Arg
 
-Primary = Group / Let / If / Fn / Int / Bool / Var
+Arg = BinOp / Term
+
+Term = Group / Let / If / Fn / Int / Bool / Var
 
 Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "in" / "fn"
 
@@ -51,24 +53,24 @@ Fn = "fn" _ param:Var _ "->" _ body:Exp
 		return new exp.Fn(param, body)
 	}
 
-Call = fn:Primary __ arg:Exp
+Call = head:Term tail:(__ Arg)+
 	{
-		return new exp.Call(fn, arg)
+		return tail.reduce((fn, [,arg]) => new exp.Call(fn, arg), head)
 	}
 
 BinOp = LessThan / Additive / Multitive
 
-LessThan = left:(Additive / Primary) _ op:"<" _ right:(LessThan / Additive / Primary)
+LessThan = left:(Additive / Term) _ op:"<" _ right:(LessThan / Additive / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}
 
-Additive = left:(Multitive / Primary) _ op:"+" _ right:(Additive / Multitive / Primary)
+Additive = left:(Multitive / Term) _ op:"+" _ right:(Additive / Multitive / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}
 
-Multitive = left:Primary _ op:"*" _ right:(Multitive / Primary)
+Multitive = left:Term _ op:"*" _ right:(Multitive / Term)
 	{
 		return new exp.BinOp(left, op, right)
 	}
