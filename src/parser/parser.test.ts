@@ -84,6 +84,17 @@ describe('parsing let expression', () => {
 	)
 })
 
+describe('parsing let rec expression', () => {
+	testParsing(
+		'let rec f = fn x -> x + 1 in f',
+		'(let rec f = (fn x -> (x + 1)) in f)'
+	)
+	testParsing(
+		'let rec f x = x + 1 in f',
+		'(let rec f = (fn x -> (x + 1)) in f)'
+	)
+})
+
 describe('parsing function literal', () => {
 	testParsing('fn x -> x + 1', '(fn x -> (x + 1))')
 	testParsing('fn x -> fn y -> x + y', '(fn x -> (fn y -> (x + y)))')

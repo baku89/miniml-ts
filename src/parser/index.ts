@@ -16,7 +16,7 @@ Program = _ prog:Exp _
 
 Exp = LessThan / Term
 
-Term = Let / If / Fn / Int / Bool / Var / Group
+Term = LetRec / Let / If / Fn / Int / Bool / Var / Group
 
 Int = [0-9]+
 	{
@@ -30,7 +30,7 @@ Bool = ("true" / "false")
 		return new exp.Bool(val)
 	}
 
-Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "and" / "in" / "fn"
+Reserved = "true" / "false" / "if" / "then" / "else" / "let" / "rec" / "and" / "in" / "fn"
 
 Var = v:(AlphabeticalVar / InfixVar)
 	{
@@ -61,6 +61,11 @@ Let = "let" _ pairs:LetDeclarations _ "in" _ body:Exp
 	{
 		return new exp.Let(pairs, body)
 	}
+
+LetRec = "let" _ "rec" _ pairs:LetDeclarations _ "in" _ body:Exp
+{
+	return new exp.LetRec(pairs, body)
+}
 
 LetDeclarations = head:Assign tail:(_ "and" _ Assign)*
 	{

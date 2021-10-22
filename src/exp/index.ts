@@ -1,4 +1,4 @@
-export type Exp = Var | Int | Bool | Infix | If | Let | Fn | Call
+export type Exp = Var | Int | Bool | Infix | If | Let | LetRec | Fn | Call
 
 export type Type = Exp['type']
 
@@ -76,6 +76,21 @@ export class Let implements IExp {
 
 		const body = this.body.print()
 		return `(let ${declarations} in ${body})`
+	}
+}
+
+export class LetRec implements IExp {
+	public type: 'letRec' = 'letRec'
+
+	public constructor(public pairs: [Var, Exp][], public body: Exp) {}
+
+	public print(): string {
+		const declarations = this.pairs
+			.map(([n, e]) => `${n.print()} = ${e.print()}`)
+			.join(' and ')
+
+		const body = this.body.print()
+		return `(let rec ${declarations} in ${body})`
 	}
 }
 
