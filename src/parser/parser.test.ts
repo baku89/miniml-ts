@@ -2,6 +2,9 @@ import {parse} from '.'
 
 describe('parser', () => {
 	runTest('1', '1')
+	runTest('   1', '1')
+	runTest('   1   ', '1')
+	runTest('   1   \t\n', '1')
 	runTest('true', 'true')
 	runTest('false', 'false')
 	runTest('1 * 2 + 3', '((1 * 2) + 3)')

@@ -3,9 +3,14 @@ import peggy from 'peggy'
 import * as exp from '../exp'
 
 const ParserDefinition = `
+Program = _ prog:Exp _
+	{
+		return prog
+	}
+
 Exp = BinOp / Primary
 
-Primary = Group / Int / Bool
+Primary = Group / If / Int / Bool
 
 Int = str:$([0-9]+)
 	{
