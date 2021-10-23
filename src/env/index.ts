@@ -1,4 +1,5 @@
 import {parse} from '../parser'
+import {Ty} from '../ty'
 import * as value from '../value'
 
 export class Env<T> {
@@ -47,5 +48,9 @@ export class Env<T> {
 		env.pairs.set('<', new value.Fn('x', parse('fn y -> x < y'), env))
 
 		return env
+	}
+
+	public static createTy() {
+		return new Env<Ty>()
 	}
 }

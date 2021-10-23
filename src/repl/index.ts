@@ -4,6 +4,7 @@ import * as repl from 'repl'
 import {Env} from '../env'
 import {evaluate} from '../eval'
 import {parse} from '../parser'
+import {inspectType} from '../ty'
 
 function startRepl() {
 	repl.start({
@@ -12,7 +13,8 @@ function startRepl() {
 			const exp = parse(input)
 			const env = Env.createGlobal()
 			const val = evaluate(exp, env)
-			cb(null, val.print())
+			const ty = inspectType(exp, Env.createTy())
+			cb(null, `val ${val.print()} : ${ty.print()}`)
 		},
 		writer: v => v,
 	})
