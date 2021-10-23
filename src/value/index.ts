@@ -1,5 +1,5 @@
 import {Env} from '../env'
-import * as exp from '../exp'
+import * as Exp from '../exp'
 
 export type Value = Int | Bool | Fn
 
@@ -32,7 +32,7 @@ export class Fn implements IValue {
 
 	public constructor(
 		public param: string,
-		public body: exp.Exp,
+		public body: Exp.Node,
 		public env: Env<Value>
 	) {}
 

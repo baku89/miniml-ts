@@ -1,4 +1,4 @@
-import * as exp from '../exp'
+import * as Exp from '../exp'
 import {parse} from '.'
 
 describe('literals', () => {
@@ -26,7 +26,7 @@ describe('literals', () => {
 	isExpType('(++++)', 'var')
 	isExpType('(+/+)', 'var')
 
-	function isExpType(input: string, type: exp.Type) {
+	function isExpType(input: string, type: Exp.Type) {
 		test(`${input} to be parsed as exp type ${type}`, () => {
 			const exp = parse(input)
 			expect(exp.type).toBe(type)

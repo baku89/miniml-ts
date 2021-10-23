@@ -1,6 +1,6 @@
 import {parse} from '../parser'
-import {Ty} from '../ty'
-import * as value from '../value'
+import * as Ty from '../ty'
+import * as Value from '../value'
 
 export class Env<T> {
 	private constructor(private pairs = new Map<string, T>()) {}
@@ -41,16 +41,16 @@ export class Env<T> {
 	}
 
 	public static createGlobal() {
-		const env = new Env<value.Value>()
+		const env = new Env<Value.Value>()
 
-		env.pairs.set('+', new value.Fn('x', parse('fn y -> x + y'), env))
-		env.pairs.set('*', new value.Fn('x', parse('fn y -> x * y'), env))
-		env.pairs.set('<', new value.Fn('x', parse('fn y -> x < y'), env))
+		env.pairs.set('+', new Value.Fn('x', parse('fn y -> x + y'), env))
+		env.pairs.set('*', new Value.Fn('x', parse('fn y -> x * y'), env))
+		env.pairs.set('<', new Value.Fn('x', parse('fn y -> x < y'), env))
 
 		return env
 	}
 
 	public static createTy() {
-		return new Env<Ty>()
+		return new Env<Ty.Any>()
 	}
 }

@@ -1,8 +1,8 @@
 import {Env} from '../env'
-import {Exp, Infix} from '../exp'
-import * as value from '../value'
+import * as Exp from '../exp'
+import * as Value from '../value'
 
-export function evaluate(exp: Exp, env: Env<value.Value>): value.Value {
+export function evaluate(exp: Exp.Node, env: Env<Value.Value>): Value.Value {
 	switch (exp.type) {
 		case 'var': {
 			const v = env.lookup(exp.id)
@@ -10,9 +10,9 @@ export function evaluate(exp: Exp, env: Env<value.Value>): value.Value {
 			return v
 		}
 		case 'int':
-			return new value.Int(exp.value)
+			return new Value.Int(exp.value)
 		case 'bool':
-			return new value.Bool(exp.value)
+			return new Value.Bool(exp.value)
 		case 'infix': {
 			const left = evaluate(exp.left, env)
 			const right = evaluate(exp.right, env)
@@ -46,14 +46,14 @@ export function evaluate(exp: Exp, env: Env<value.Value>): value.Value {
 					throw new Error('let rec for non-functional value is not supported')
 				}
 
-				const fn = new value.Fn(val.param.id, val.body, innerEnv)
+				const fn = new Value.Fn(val.param.id, val.body, innerEnv)
 				innerEnv.set(name.id, fn)
 			}
 
 			return evaluate(exp.body, innerEnv)
 		}
 		case 'fn': {
-			return new value.Fn(exp.param.id, exp.body, env)
+			return new Value.Fn(exp.param.id, exp.body, env)
 		}
 		case 'call': {
 			const fn = evaluate(exp.fn, env)
@@ -68,20 +68,20 @@ export function evaluate(exp: Exp, env: Env<value.Value>): value.Value {
 }
 
 function applyInfix(
-	op: Infix['op'],
-	left: value.Value,
-	right: value.Value
-): value.Value {
+	op: Exp.Infix['op'],
+	left: Value.Value,
+	right: Value.Value
+): Value.Value {
 	if (!(left.type === 'int' && right.type === 'int')) {
 		throw new Error('Both arguments must be int: ' + op)
 	}
 
 	switch (op) {
 		case '+':
-			return new value.Int(left.value + right.value)
+			return new Value.Int(left.value + right.value)
 		case '*':
-			return new value.Int(left.value * right.value)
+			return new Value.Int(left.value * right.value)
 		case '<':
-			return new value.Bool(left.value < right.value)
+			return new Value.Bool(left.value < right.value)
 	}
 }

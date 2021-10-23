@@ -2,7 +2,7 @@ import {Env} from '../env'
 import * as Exp from '../exp'
 import {Any, Bool, Fn, Int, Var} from './ty'
 
-export function inspectType(exp: Exp.Exp, tyenv: Env<Any>): Any {
+export function inspectType(exp: Exp.Node, tyenv: Env<Any>): Any {
 	switch (exp.type) {
 		case 'var': {
 			const t = tyenv.lookup(exp.id)
@@ -30,4 +30,4 @@ function inspectInfixType(op: Exp.Infix['op'], left: Any, right: Any) {
 	throw new Error('Both arguments must be integer: ' + op)
 }
 
-export {Any as Ty, Int as Int, Bool as Bool, Var as Var, Fn as Fn}
+export {Any, Int, Bool, Var, Fn}

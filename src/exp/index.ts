@@ -1,6 +1,6 @@
-export type Exp = Var | Int | Bool | Infix | If | Let | LetRec | Fn | Call
+export type Node = Var | Int | Bool | Infix | If | Let | LetRec | Fn | Call
 
-export type Type = Exp['type']
+export type Type = Node['type']
 
 interface IExp {
 	type: string
@@ -38,9 +38,9 @@ export class Bool implements IExp {
 export class Infix implements IExp {
 	public type: 'infix' = 'infix'
 	public constructor(
-		public left: Exp,
+		public left: Node,
 		public op: '+' | '*' | '<',
-		public right: Exp
+		public right: Node
 	) {}
 
 	public print(): string {
@@ -51,9 +51,9 @@ export class Infix implements IExp {
 export class If implements IExp {
 	public type: 'if' = 'if'
 	public constructor(
-		public test: Exp,
-		public consequent: Exp,
-		public alternate: Exp
+		public test: Node,
+		public consequent: Node,
+		public alternate: Node
 	) {}
 
 	public print(): string {
@@ -67,7 +67,7 @@ export class If implements IExp {
 export class Let implements IExp {
 	public type: 'let' = 'let'
 
-	public constructor(public pairs: [Var, Exp][], public body: Exp) {}
+	public constructor(public pairs: [Var, Node][], public body: Node) {}
 
 	public print(): string {
 		const declarations = this.pairs
@@ -82,7 +82,7 @@ export class Let implements IExp {
 export class LetRec implements IExp {
 	public type: 'letRec' = 'letRec'
 
-	public constructor(public pairs: [Var, Exp][], public body: Exp) {}
+	public constructor(public pairs: [Var, Node][], public body: Node) {}
 
 	public print(): string {
 		const declarations = this.pairs
@@ -97,7 +97,7 @@ export class LetRec implements IExp {
 export class Fn implements IExp {
 	public type: 'fn' = 'fn'
 
-	public constructor(public param: Var, public body: Exp) {}
+	public constructor(public param: Var, public body: Node) {}
 
 	public print(): string {
 		const param = this.param.print()
@@ -110,7 +110,7 @@ export class Fn implements IExp {
 export class Call implements IExp {
 	public type: 'call' = 'call'
 
-	public constructor(public fn: Exp, public arg: Exp) {}
+	public constructor(public fn: Node, public arg: Node) {}
 
 	public print(): string {
 		const fn = this.fn.print()
