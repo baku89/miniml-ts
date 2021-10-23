@@ -50,15 +50,15 @@ export class Fn implements ITy {
 	}
 }
 
-export type Subst = [Var, Any][]
+export type Subst = [number, Any][]
 
-export function getFreeVars(ty: Any): Set<Var> {
+export function getFreeVars(ty: Any): Set<number> {
 	switch (ty.type) {
 		case 'int':
 		case 'bool':
 			return new Set()
 		case 'var':
-			return new Set([ty])
+			return new Set([ty.id])
 		case 'fn':
 			return new Set([...getFreeVars(ty.param), ...getFreeVars(ty.body)])
 	}
@@ -69,8 +69,8 @@ export function applySubst(ty: Any, subst: Subst): Any {
 		case 'var':
 			if (subst.length === 0) return ty
 			else {
-				const [[tyvar, sub], ...rest] = subst
-				if (ty.id === tyvar.id) return applySubst(sub, rest)
+				const [[id, sub], ...rest] = subst
+				if (ty.id === id) return applySubst(sub, rest)
 				return applySubst(ty, rest)
 			}
 		case 'fn': {
@@ -81,4 +81,30 @@ export function applySubst(ty: Any, subst: Subst): Any {
 		default:
 			return ty
 	}
+}
+
+export function unify(constraints: [Any, Any][]): Subst {
+	if (constraints.length === 0) return []
+
+	const [[x, y], ...rest] = constraints
+
+	if (x.print() === y.print()) return unify(rest)
+
+	if (x.type === 'fn' && y.type === 'fn') {
+		const param: [Any, Any] = [x.param, y.param]
+		const body: [Any, Any] = [x.body, y.body]
+
+		return unify([param, body, ...rest])
+	}
+
+	if (x.type === 'var') {
+		const ftv = getFreeVars(y)
+		if (ftv.has(x.id)) throw new Error('Occur check')
+	}
+
+	if (y.type === 'var') {
+		return unify([[y, x], ...rest])
+	}
+
+	throw new Error('Unable to infer type')
 }

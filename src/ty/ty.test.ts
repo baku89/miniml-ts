@@ -5,7 +5,7 @@ describe('applySubst', () => {
 		const alpha = Ty.Var.createFresh()
 
 		const input = new Ty.Fn(alpha, new Ty.Bool())
-		const subst: Ty.Subst = [[alpha, new Ty.Int()]]
+		const subst: Ty.Subst = [[alpha.id, new Ty.Int()]]
 
 		const applied = Ty.applySubst(input, subst)
 
@@ -18,8 +18,8 @@ describe('applySubst', () => {
 
 		const input = beta
 		const subst: Ty.Subst = [
-			[beta, new Ty.Fn(alpha, new Ty.Int())],
-			[alpha, new Ty.Bool()],
+			[beta.id, new Ty.Fn(alpha, new Ty.Int())],
+			[alpha.id, new Ty.Bool()],
 		]
 
 		const applied = Ty.applySubst(input, subst)
