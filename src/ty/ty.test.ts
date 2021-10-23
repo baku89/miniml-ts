@@ -1,4 +1,4 @@
-import * as Ty from './ty'
+import * as Ty from '.'
 
 describe('applySubst', () => {
 	test('[(alpha, Int)] (Fn (Var alpha, Bool)) -> Fn (Int, Bool)', () => {
