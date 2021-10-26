@@ -3,6 +3,7 @@ import * as Exp from '../exp'
 import {Any, Bool, Fn, Int, Var} from './ty'
 
 export type Subst = [number, Any][]
+export type Constraints = [Any, Any][]
 
 export function getFreeVars(ty: Any): Set<number> {
 	switch (ty.type) {
@@ -35,7 +36,7 @@ export function applySubst(ty: Any, subst: Subst): Any {
 	}
 }
 
-export function unify(constraints: [Any, Any][]): Subst {
+export function unify(constraints: Constraints): Subst {
 	if (constraints.length === 0) return []
 
 	const [[x, y], ...rest] = constraints
