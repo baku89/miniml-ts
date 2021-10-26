@@ -76,32 +76,82 @@ export function unify(eqs: Constraints): Subst {
 	throw new Error('Unable to infer type')
 }
 
-export function inferType(exp: Exp.Node, tyenv: Env<Any>): Any {
+function eqsOfSubst(subst: Subst): Constraints {
+	return subst.map(([id, ty]) => [new Var(id), ty])
+}
+
+export function inferType(exp: Exp.Node, tyenv: Env<Any>): [Subst, Any] {
 	switch (exp.type) {
 		case 'var': {
 			const t = tyenv.lookup(exp.id)
 			if (!t) throw new Error('Variable not bound: ' + exp.id)
-			return t
+			return [[], t]
 		}
 		case 'int':
-			return new Int()
+			return [[], new Int()]
 		case 'bool':
-			return new Bool()
+			return [[], new Bool()]
 		case 'infix': {
-			const left = inferType(exp.left, tyenv)
-			const right = inferType(exp.right, tyenv)
-			return inspectInfixType(exp.op, left, right)
+			const [sLeft, tyLeft] = inferType(exp.left, tyenv)
+			const [sRight, tyRight] = inferType(exp.right, tyenv)
+			const [cInfix, tyInfix] = inferInfixType(exp.op, tyLeft, tyRight)
+			const eqs = [...eqsOfSubst(sLeft), ...eqsOfSubst(sRight), ...cInfix]
+			const s = unify(eqs)
+			return [s, substType(tyInfix, s)]
+		}
+		case 'if': {
+			const [sTest, tyTest] = inferType(exp.test, tyenv)
+			const [sConseq, tyConseq] = inferType(exp.consequent, tyenv)
+			const [sAlt, tyAlt] = inferType(exp.alternate, tyenv)
+			const eq1 = eqsOfSubst([...sTest, ...sConseq, ...sAlt])
+			const eqs: Constraints = [[tyTest, new Bool()], [tyConseq, tyAlt], ...eq1]
+			const s = unify(eqs)
+			return [s, substType(tyConseq, s)]
+		}
+		case 'fn': {
+			const tyParam = Var.createFresh()
+			const innerTyenv = tyenv.extend(exp.param.id, tyParam)
+			const [s, tyBody] = inferType(exp.body, innerTyenv)
+			return [s, new Fn(substType(tyParam, s), tyBody)]
+		}
+		case 'call': {
+			const [sFn, tyFn] = inferType(exp.fn, tyenv)
+			const [sArg, tyArg] = inferType(exp.arg, tyenv)
+			const tyBody = Var.createFresh()
+			const eq1 = eqsOfSubst([...sFn, ...sArg])
+			const eqs: Constraints = [[tyFn, new Fn(tyArg, tyBody)], ...eq1]
+			const s = unify(eqs)
+			return [s, substType(tyBody, s)]
 		}
 		default:
 			throw new Error('Not yet implemented')
 	}
 }
 
-function inspectInfixType(op: Exp.Infix['op'], left: Any, right: Any) {
-	if (left.type === 'int' && right.type === 'int') {
-		return new Int()
+function inferInfixType(
+	op: Exp.Infix['op'],
+	left: Any,
+	right: Any
+): [Constraints, Any] {
+	switch (op) {
+		case '+':
+		case '*':
+			return [
+				[
+					[left, new Int()],
+					[right, new Int()],
+				],
+				new Int(),
+			]
+		case '<':
+			return [
+				[
+					[left, new Int()],
+					[right, new Int()],
+				],
+				new Bool(),
+			]
 	}
-	throw new Error('Both arguments must be integer: ' + op)
 }
 
 export {Any, Int, Bool, Var, Fn}
