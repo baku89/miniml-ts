@@ -61,7 +61,7 @@ export function unify(constraints: [Any, Any][]): Subst {
 	throw new Error('Unable to infer type')
 }
 
-export function inspectType(exp: Exp.Node, tyenv: Env<Any>): Any {
+export function inferType(exp: Exp.Node, tyenv: Env<Any>): Any {
 	switch (exp.type) {
 		case 'var': {
 			const t = tyenv.lookup(exp.id)
@@ -73,8 +73,8 @@ export function inspectType(exp: Exp.Node, tyenv: Env<Any>): Any {
 		case 'bool':
 			return new Bool()
 		case 'infix': {
-			const left = inspectType(exp.left, tyenv)
-			const right = inspectType(exp.right, tyenv)
+			const left = inferType(exp.left, tyenv)
+			const right = inferType(exp.right, tyenv)
 			return inspectInfixType(exp.op, left, right)
 		}
 		default:
