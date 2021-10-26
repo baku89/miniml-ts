@@ -17,18 +17,18 @@ export function getFreeVars(ty: Any): Set<number> {
 	}
 }
 
-export function applySubst(ty: Any, subst: Subst): Any {
+export function substType(ty: Any, subst: Subst): Any {
 	switch (ty.type) {
 		case 'var':
 			if (subst.length === 0) return ty
 			else {
 				const [[id, sub], ...rest] = subst
-				if (ty.id === id) return applySubst(sub, rest)
-				return applySubst(ty, rest)
+				if (ty.id === id) return substType(sub, rest)
+				return substType(ty, rest)
 			}
 		case 'fn': {
-			const param = applySubst(ty.param, subst)
-			const body = applySubst(ty.body, subst)
+			const param = substType(ty.param, subst)
+			const body = substType(ty.body, subst)
 			return new Fn(param, body)
 		}
 		default:
