@@ -1,35 +1,35 @@
 import * as Ty from '.'
 
 describe('applySubst', () => {
-	test('[(alpha, Int)] (Fn (Var alpha, Bool)) -> Fn (Int, Bool)', () => {
-		const alpha = Ty.Var.createFresh()
+	test('[X |-> int] (X -> bool) := int -> bool', () => {
+		const X = Ty.Var.createFresh()
 
-		const input = new Ty.Fn(alpha, new Ty.Bool())
-		const subst: Ty.Subst = [[alpha.id, new Ty.Int()]]
+		const input = new Ty.Fn(X, new Ty.Bool())
+		const subst: Ty.Subst = [[X.id, new Ty.Int()]]
 
 		const applied = Ty.substType(input, subst)
 
-		expect(applied.print()).toBe('(fn int -> bool)')
+		expect(applied.print()).toBe('(int -> bool)')
 	})
 
-	test('[(beta, (Fn (Var alpha, Int))); (alpha, Bool)] (Var beta) -> Fn (Bool, Int)', () => {
-		const alpha = Ty.Var.createFresh()
-		const beta = Ty.Var.createFresh()
+	test('[Y |-> X -> int, X |-> bool] Y := bool -> int', () => {
+		const X = Ty.Var.createFresh()
+		const Y = Ty.Var.createFresh()
 
-		const input = beta
+		const input = Y
 		const subst: Ty.Subst = [
-			[beta.id, new Ty.Fn(alpha, new Ty.Int())],
-			[alpha.id, new Ty.Bool()],
+			[Y.id, new Ty.Fn(X, new Ty.Int())],
+			[X.id, new Ty.Bool()],
 		]
 
 		const applied = Ty.substType(input, subst)
 
-		expect(applied.print()).toBe('(fn bool -> int)')
+		expect(applied.print()).toBe('(bool -> int)')
 	})
 })
 
 describe('unify', () => {
-	test('[X = Int, Y = X] => [Int |-> X, Int |-> Y]', () => {
+	test('{X = int, Y = X} => [X |-> int, Y |-> int]', () => {
 		const X = Ty.Var.createFresh()
 		const Y = Ty.Var.createFresh()
 
@@ -44,7 +44,7 @@ describe('unify', () => {
 		matchSubst(subst, Y, new Ty.Int())
 	})
 
-	test('[X = Y, Y = Int] => [Int |-> Y, Int |-> Y]', () => {
+	test('{X = Y, Y = int} => [X |-> Y, Y |-> int]', () => {
 		const X = Ty.Var.createFresh()
 		const Y = Ty.Var.createFresh()
 
@@ -59,7 +59,7 @@ describe('unify', () => {
 		matchSubst(subst, Y, new Ty.Int())
 	})
 
-	test('[Y -> Z = X, Y = Z, Int = Z] => [(Y -> Z) |-> X, Z |-> Y, Int |-> Z]', () => {
+	test('{Y -> Z = X, Y = Z, int = Z} => [X |-> Y -> Z, Y |-> Z, Z |-> int]', () => {
 		const X = Ty.Var.createFresh()
 		const Y = Ty.Var.createFresh()
 		const Z = Ty.Var.createFresh()
