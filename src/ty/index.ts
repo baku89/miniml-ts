@@ -36,10 +36,21 @@ export function substType(ty: Any, subst: Subst): Any {
 	}
 }
 
-export function unify(constraints: Constraints): Subst {
-	if (constraints.length === 0) return []
+function substConstraints(eqs: Constraints, subst: Subst): Constraints {
+	if (eqs.length === 0) return []
 
-	const [[x, y], ...rest] = constraints
+	const [[t1, t2], ...rest] = eqs
+
+	const t1s = substType(t1, subst)
+	const t2s = substType(t2, subst)
+
+	return [[t1s, t2s], ...substConstraints(rest, subst)]
+}
+
+export function unify(eqs: Constraints): Subst {
+	if (eqs.length === 0) return []
+
+	const [[x, y], ...rest] = eqs
 
 	if (x.print() === y.print()) return unify(rest)
 
@@ -53,6 +64,9 @@ export function unify(constraints: Constraints): Subst {
 	if (x.type === 'var') {
 		const ftv = getFreeVars(y)
 		if (ftv.has(x.id)) throw new Error('Occur check')
+
+		const restSubst = substConstraints(rest, [[x.id, y]])
+		return [[x.id, y], ...unify(restSubst)]
 	}
 
 	if (y.type === 'var') {
