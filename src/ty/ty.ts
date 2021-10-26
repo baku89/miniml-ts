@@ -25,7 +25,7 @@ export class Bool implements ITy {
 export class Var implements ITy {
 	public type: 'var' = 'var'
 
-	private constructor(public id: number) {}
+	public constructor(public id: number) {}
 
 	public print(): string {
 		return `(tyvar ${this.id})`
