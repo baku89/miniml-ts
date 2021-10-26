@@ -46,6 +46,6 @@ export class Fn implements ITy {
 	public constructor(public param: Any, public body: Any) {}
 
 	public print(): string {
-		return `(fn ${this.param.print()} -> ${this.body.print()})`
+		return `(${this.param.print()} -> ${this.body.print()})`
 	}
 }
