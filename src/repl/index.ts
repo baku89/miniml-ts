@@ -13,7 +13,7 @@ function startRepl() {
 			const exp = parse(input)
 			const env = Env.createGlobal()
 			const val = evaluate(exp, env)
-			const ty = inferType(exp, Env.createTy())
+			const [, ty] = inferType(exp, Env.createTy())
 			cb(null, `val ${val.print()} : ${ty.print()}`)
 		},
 		writer: v => v,
