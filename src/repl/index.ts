@@ -4,7 +4,7 @@ import * as repl from 'repl'
 import {Env} from '../env'
 import {evaluate} from '../eval'
 import {parse} from '../parser'
-import {inspectType} from '../ty'
+import {inferType} from '../ty'
 
 function startRepl() {
 	repl.start({
@@ -13,7 +13,7 @@ function startRepl() {
 			const exp = parse(input)
 			const env = Env.createGlobal()
 			const val = evaluate(exp, env)
-			const ty = inspectType(exp, Env.createTy())
+			const ty = inferType(exp, Env.createTy())
 			cb(null, `val ${val.print()} : ${ty.print()}`)
 		},
 		writer: v => v,
@@ -21,9 +21,7 @@ function startRepl() {
 }
 
 function main() {
-	console.log(
-		`Hello ${os.userInfo().username}! This is the Monkey programming language!`
-	)
+	console.log(`Hello ${os.userInfo().username}! This is the MiniML REPL!`)
 	startRepl()
 }
 
